@@ -24,4 +24,10 @@ public class User {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+    private String access_token;
+    private String refresh_token;
+
+    public void addRole(Role role){
+        roles.add(role);
+    }
 }

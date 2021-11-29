@@ -1,5 +1,7 @@
 package com.jwt.test.demo.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
 import com.jwt.test.demo.repo.RoleRepo;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +52,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User saveUser(User user) {
         log.info("Saving new user {}", user.getName());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.addRole(roleRepo.findByName("ROLE_USER"));
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        String access_token = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withIssuer("auth0")
+                .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .sign(algorithm);
+        log.info(access_token);
+        String refresh_token = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withIssuer("auth0")
+                .sign(algorithm);
+        user.setAccess_token(access_token);
+        user.setRefresh_token(refresh_token);
         return userRepo.save(user);
     }
 

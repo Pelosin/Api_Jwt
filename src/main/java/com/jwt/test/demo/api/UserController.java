@@ -10,6 +10,7 @@ import com.jwt.test.demo.domain.User;
 import com.jwt.test.demo.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -46,6 +48,16 @@ public class UserController {
     @PostMapping("/user/save")
     public ResponseEntity<User> saveUser (@RequestBody User user){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
+//        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+//        String access_token = JWT.create()
+//                .withSubject(user.getUsername())
+//                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+//                .withIssuer("auth0")
+//                .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+//                .sign(algorithm);
+//        log.info(access_token);
+//        User userSaved = userService.getUser(user.getUsername());
+//        log.info(userSaved.getRoles());
         return  ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 
