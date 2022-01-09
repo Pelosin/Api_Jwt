@@ -1,4 +1,4 @@
-package com.jwt.test.demo.service;
+package com.jwt.test.demo.service.serviceImplementation;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,9 +6,13 @@ import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
 import com.jwt.test.demo.repo.RoleRepo;
 import com.jwt.test.demo.repo.UserRepo;
+import com.jwt.test.demo.service.UserService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,9 +32,9 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final UserRepo userRepo;
-    private final RoleRepo roleRepo;
-    private final PasswordEncoder passwordEncoder;
+    private final @NonNull UserRepo userRepo;
+    private final @NonNull RoleRepo roleRepo;
+    private final @NonNull PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -88,7 +92,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUser(String username) {
         log.info("Fetching user {}", username);
-        return userRepo.findByUsername(username);
+        User userByUsername = userRepo.findByUsername(username);
+        return userByUsername;
     }
 
     @Override
@@ -96,4 +101,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.info("Fetching all user");
         return userRepo.findAll();
     }
+
 }

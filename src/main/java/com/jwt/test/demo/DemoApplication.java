@@ -1,7 +1,9 @@
 package com.jwt.test.demo;
 
+import com.jwt.test.demo.domain.Food;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
+import com.jwt.test.demo.repo.FoodRepo;
 import com.jwt.test.demo.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @SpringBootApplication
@@ -24,9 +27,12 @@ public class DemoApplication {
 		return  new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	CommandLineRunner run (UserService userService) {
-		return args -> {
+//	@Bean
+//	CommandLineRunner run (UserService userService, FoodRepo foodRepo) {
+//		return args -> {
+//			foodRepo.save(new Food(null, "Hamburger", "bla", new BigDecimal(13.66)));
+//			foodRepo.save(new Food(null, "Francesinha", "bla", new BigDecimal(17.66)));
+
 //			userService.saveRole(new Role(null, "ROLE_USER"));
 //			userService.saveRole(new Role(null, "ROLE_MANAGER"));
 //			userService.saveRole(new Role(null, "ROLE_ADMIN"));
@@ -46,9 +52,9 @@ public class DemoApplication {
 //			userService.addRole("miguel", "ROLE_SUPER_ADMIN");
 //			userService.saveUser(new User(null, "Losi" , "losi", "1234", new ArrayList<>()));
 //			userService.addRole("jhon", "ROLE_USER");
-
-
-		};
-	}
+//
+//
+//		};
+//	}
 
 }

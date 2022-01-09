@@ -2,7 +2,7 @@ version: '3.1'
 services:
   db:
     image: mysql
-    container_name: mysql_jwt
+    container_name: pap_test
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
