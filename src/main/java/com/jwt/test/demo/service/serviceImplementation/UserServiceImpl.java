@@ -4,15 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
+import com.jwt.test.demo.exception.BadRequestException;
 import com.jwt.test.demo.repo.RoleRepo;
 import com.jwt.test.demo.repo.UserRepo;
 import com.jwt.test.demo.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,14 +59,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .withIssuer("auth0")
                 .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .sign(algorithm);
         log.info(access_token);
         String refresh_token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .withIssuer("auth0")
                 .sign(algorithm);
         user.setAccess_token(access_token);
@@ -91,8 +90,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User getUser(String username) {
-        log.info("Fetching user {}", username);
         User userByUsername = userRepo.findByUsername(username);
+        if (userByUsername == null){
+            throw new BadRequestException("User" + username + "not found at DB");
+        }
+        log.info("Fetching user {}", username);
         return userByUsername;
     }
 

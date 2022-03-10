@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -28,6 +26,9 @@ public class Order {
     private BigDecimal price;
     @Column(unique = true, nullable = false)
     private OrderStatus status;
+//    @Column(unique = true, nullable = false)
+    @OneToOne
+    private TbTable tableToServe;
 
 
 }

@@ -1,6 +1,7 @@
 package com.jwt.test.demo.service.serviceImplementation;
 
 import com.jwt.test.demo.domain.Order;
+import com.jwt.test.demo.exception.BadRequestException;
 import com.jwt.test.demo.mapper.OrderMapper;
 import com.jwt.test.demo.payload.request.OrderCreateRequest;
 import com.jwt.test.demo.repo.OrderRepo;
@@ -22,16 +23,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order saveOrder(OrderCreateRequest orderCreateRequest) {
-
         Order orderToBeSaved = orderMapper.toOrder(orderCreateRequest);
-
+        if(!orderToBeSaved.getTableToServe().isOccupied()){
+            throw new BadRequestException("The table is not occupied");
+        }
         return orderRepo.save(orderToBeSaved);
     }
 
     @Override
     public Optional<Order> findOrderById(Long id) {
-        Optional<Order> order = orderRepo.findById(id); 
-        return order;
+        return orderRepo.findById(id);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.jwt.test.demo.domain.OrderStatus;
 import com.jwt.test.demo.payload.request.LineOrderCreateRequest;
 import com.jwt.test.demo.payload.request.OrderCreateRequest;
 import com.jwt.test.demo.repo.FoodRepo;
+import com.jwt.test.demo.repo.TableRepo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class OrderMapper {
 
 
     private final @NonNull FoodRepo foodRepo;
+    private final @NonNull TableRepo tableRepo;
 
     public Order toOrder(OrderCreateRequest orderCreateRequest){
         List<LineOrder> lineOrderList = new ArrayList<>();
@@ -29,6 +31,6 @@ public class OrderMapper {
             lineOrderList.add(lineOrder);
         }
 
-        return new Order(null, lineOrderList, orderCreateRequest.getPrice(), OrderStatus.SUBMIT);
+        return new Order(null, lineOrderList, orderCreateRequest.getPrice(), OrderStatus.SUBMIT, tableRepo.findById(orderCreateRequest.getTableId()).get());
     }
 }

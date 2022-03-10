@@ -30,6 +30,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public Food saveFood(Food food) {
         return foodRepo.save(food);
     }

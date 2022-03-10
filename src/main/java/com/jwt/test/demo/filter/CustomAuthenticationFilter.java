@@ -68,14 +68,20 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
+        tokens.put("username", user.getUsername());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        super.unsuccessfulAuthentication(request, response, failed);
+        //Gives BadCredentialsException class when the user puts the wrong username
         log.info("Failed to auth");
+        log.info(failed.getMessage());
+        Map<String, String> error = new HashMap<>();
+        error.put("error_message", failed.getMessage());
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), error);
     }
 
 }

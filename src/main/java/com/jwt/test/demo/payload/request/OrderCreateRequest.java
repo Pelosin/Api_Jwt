@@ -1,5 +1,6 @@
 package com.jwt.test.demo.payload.request;
 
+import com.jwt.test.demo.domain.TbTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ import java.util.List;
 public class OrderCreateRequest {
     private List<LineOrderCreateRequest> lineOrderRequestList;
     private BigDecimal price;
+    private Long tableId;
 }
