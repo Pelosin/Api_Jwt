@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
         if(!orderToBeSaved.getTableToServe().isOccupied()){
             throw new BadRequestException("The table is not occupied");
         }
+        log.info("Saving order {} ", orderToBeSaved.toString());
         return orderRepo.save(orderToBeSaved);
     }
 
@@ -38,5 +40,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrderById(Long id) {
         orderRepo.delete(findOrderById(id).get());
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepo.findAll();
     }
 }

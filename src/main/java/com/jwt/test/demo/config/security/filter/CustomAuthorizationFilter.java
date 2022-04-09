@@ -1,4 +1,4 @@
-package com.jwt.test.demo.filter;
+package com.jwt.test.demo.config.security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

@@ -39,6 +39,7 @@ public class TbTableServiceImpl implements TableService {
         }else{
             tableToOccupy.setOccupied(true);
             tableRepo.save(tableToOccupy);
+            log.info("Occupying table {}", tableToOccupy.getTableNumber());
             return tableToOccupy.getId();
         }
     }
@@ -49,6 +50,7 @@ public class TbTableServiceImpl implements TableService {
         if (tableToLeave.isOccupied()){
             tableToLeave.setOccupied(false);
             tableRepo.save(tableToLeave);
+            log.info("Leaving table {}", tableToLeave.getTableNumber());
         }else{
             throw new BadRequestException("Table was not being occupied to be leaved");
         }

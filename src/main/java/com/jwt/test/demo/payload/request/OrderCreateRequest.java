@@ -1,5 +1,6 @@
 package com.jwt.test.demo.payload.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jwt.test.demo.domain.TbTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

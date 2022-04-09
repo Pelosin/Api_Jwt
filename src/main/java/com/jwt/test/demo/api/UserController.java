@@ -5,8 +5,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jwt.test.demo.config.security.JwtUtil;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
+import com.jwt.test.demo.exception.BadRequestException;
+import com.jwt.test.demo.payload.request.UserRequest;
 import com.jwt.test.demo.service.UserService;
 import lombok.Data;
 import lombok.NonNull;
@@ -14,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,14 +34,18 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class UserController {
     private final @NonNull UserService userService;
+    private final @NonNull AuthenticationManager authenticationManager;
+    private final @NonNull JwtUtil jwtUtil;
 
     @GetMapping("/test")
     public ResponseEntity<Void> testJwtToken(){
@@ -48,9 +57,23 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<User> findUserByUsername(@RequestParam String username) {
+    @GetMapping("/user/{username}")
+    public ResponseEntity<User> findUserByUsername(@PathVariable String username) {
         return ResponseEntity.ok().body(userService.getUser(username));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody UserRequest userRequest){
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword())
+            );
+            log.info("trying to log {} {}", userRequest.getUsername(), userRequest.getPassword());
+        } catch (Exception e) {
+            throw new BadRequestException("Bad credentials");
+        }
+
+        return ResponseEntity.ok().body(jwtUtil.createTokens(userRequest.getUsername()));
     }
 
     @PostMapping("/user/save")
