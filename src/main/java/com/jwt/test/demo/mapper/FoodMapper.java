@@ -14,15 +14,16 @@ import java.util.List;
 public class FoodMapper {
     private final FoodRepo foodRepo;
 
-    public List<FoodResponse> toFoods(List<Food> foodList){
+    public List<FoodResponse> toFoods(List<Food> foodList) {
         List<FoodResponse> foodResponseList = new ArrayList<>();
 
-        for (Food food: foodList) {
+        for (Food food : foodList) {
             FoodResponse foodResponse = new FoodResponse(food.getName(),
-                    food.getDescription(), food.getPrice());
+                    food.getDescription(), food.getPrice(), food.getUrl());
             foodResponseList.add(foodResponse);
         }
-
         return foodResponseList;
     }
+
 }
+

@@ -47,6 +47,6 @@ public class TableController {
     @PutMapping("/leave/{id}")
     public ResponseEntity<Void> leaveTable(@PathVariable Long id){
         tableService.leaveTable(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

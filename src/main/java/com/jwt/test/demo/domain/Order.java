@@ -20,15 +20,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private List<LineOrder> lineOrderList;
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private BigDecimal price;
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private OrderStatus status;
-//    @Column(unique = true, nullable = false)
     @OneToOne
     private TbTable tableToServe;
-
-
 }

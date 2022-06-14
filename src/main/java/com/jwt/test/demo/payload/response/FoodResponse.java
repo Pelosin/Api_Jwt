@@ -15,4 +15,5 @@ public class FoodResponse {
     private String name;
     private String description;
     private BigDecimal price;
+    private String url;
 }

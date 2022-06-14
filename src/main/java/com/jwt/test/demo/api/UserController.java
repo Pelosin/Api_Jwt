@@ -9,6 +9,7 @@ import com.jwt.test.demo.config.security.JwtUtil;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
 import com.jwt.test.demo.exception.BadRequestException;
+import com.jwt.test.demo.exception.InvalidCredentialsException;
 import com.jwt.test.demo.payload.request.UserRequest;
 import com.jwt.test.demo.service.UserService;
 import lombok.Data;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -69,11 +71,12 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword())
             );
             log.info("trying to log {} {}", userRequest.getUsername(), userRequest.getPassword());
+            return ResponseEntity.ok().body(jwtUtil.createTokens(userRequest.getUsername()));
+
         } catch (Exception e) {
-            throw new BadRequestException("Bad credentials");
+            throw new InvalidCredentialsException("Invalid username or password");
         }
 
-        return ResponseEntity.ok().body(jwtUtil.createTokens(userRequest.getUsername()));
     }
 
     @PostMapping("/user/save")
