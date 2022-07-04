@@ -1,7 +1,5 @@
 package com.jwt.test.demo.service.serviceImplementation;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
 import com.jwt.test.demo.exception.BadRequestException;
@@ -56,21 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.info("Saving new user {}", user.getName());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.addRole(roleRepo.findByName("ROLE_USER"));
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .withIssuer("auth0")
-                .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
-                .sign(algorithm);
-        log.info(access_token);
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
-                .withIssuer("auth0")
-                .sign(algorithm);
-        user.setAccess_token(access_token);
-        user.setRefresh_token(refresh_token);
+
         return userRepo.save(user);
     }
 
@@ -89,7 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUser(String username) {
+    public User getUserByUsername(String username) {
         User userByUsername = userRepo.findByUsername(username);
         if (userByUsername == null){
             throw new BadRequestException("User" + username + "not found at DB");
@@ -102,6 +86,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> getUsers() {
         log.info("Fetching all user");
         return userRepo.findAll();
+    }
+
+    @Override
+    public User createAdminUser() {
+        Collection<Role> roles = new ArrayList<>();
+        roles.add(roleRepo.findByName("ROLE_ADMIN"));
+        log.info("Creating admin user");
+
+        return userRepo.save(User.builder()
+                .name("admin")
+                .username("PELOSI_ADMIN")
+                .password(passwordEncoder.encode("1234"))
+                .roles(roles)
+                .build());
+
     }
 
 }

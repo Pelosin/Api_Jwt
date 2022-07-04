@@ -28,10 +28,11 @@ public class User implements UserDetails {
     private String username;
     @Column(nullable = false)
     private String password;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Order> orderList;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+
     private String access_token;
     private String refresh_token;
 

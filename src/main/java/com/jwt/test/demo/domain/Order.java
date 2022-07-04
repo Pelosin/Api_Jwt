@@ -1,12 +1,17 @@
 package com.jwt.test.demo.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jwt.test.demo.config.audit.AuditorConfig;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,4 +34,10 @@ public class Order {
     private OrderStatus status;
     @OneToOne
     private TbTable tableToServe;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDateTime;
+
+
 }

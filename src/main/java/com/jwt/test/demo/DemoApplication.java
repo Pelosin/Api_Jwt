@@ -33,10 +33,17 @@ public class DemoApplication {
     CommandLineRunner run(UserService userService, FoodRepo foodRepo, CategoryRepo categoryRepo, TableRepo tableRepo, CategoryService categoryService) {
         return args -> {
 
+//            userService.saveRole(new Role(null, "ROLE_USER"));
+//            userService.saveRole(new Role(null, "ROLE_MANAGER"));
+//            userService.saveRole(new Role(null, "ROLE_ADMIN"));
+//            userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
+//
+//            userService.createAdminUser();
+//
 //            tableRepo.save(new TbTable(null, false, "Mesa 1"));
 //            tableRepo.save(new TbTable(null, false, "Mesa 2"));
 //            tableRepo.save(new TbTable(null, false, "Mesa 3"));
-
+//
 //            foodRepo.save(new Food(null, "Hamburger",
 //                    "A hamburger is a sandwich consisting of a cooked meat patty on " +
 //                    "a bun or roll. You can order a hamburger, fries, and a shake at most fast food restaurants. ",
@@ -54,7 +61,7 @@ public class DemoApplication {
 //                            "Pra completar, o prato é acompanhado por uma dose de batatas petiscar junto.",
 //                    new BigDecimal(7.50),
 //                    "https://camada.pt/delivery/wp-content/uploads/2020/03/camada-francesinhas-francesinha-scaled.jpg"));
-
+//
 //            foodRepo.save(new Food(null, "Hamburger Vegetariano",
 //                    "This hamburger is a sandwich consisting of a cooked chopped vegetables patty on " +
 //                    "a bun or roll. You can order a hamburger, fries, and a shake at most fast food restaurants. ",
@@ -71,7 +78,7 @@ public class DemoApplication {
 //                            "Pra completar, o prato é acompanhado por uma dose de batatas petiscar junto.",
 //                    new BigDecimal(7.50),
 //                    "https://rotadodouro.pt/wp-content/uploads/2019/03/rota-site-capa-pagina-francesinha-a-bordo.jpg"));
-
+//
 //            List<Food> foodList = new ArrayList<Food>() {{
 //                add(foodRepo.findByName("Francesinha simples"));
 //            }};
@@ -84,27 +91,14 @@ public class DemoApplication {
 //            List<Food> foodList3 = new ArrayList<Food>() {{
 //                add(foodRepo.findByName("Coca-cola"));
 //            }};
-
-//            categoryService.addFoodToCategory(25L, foodRepo.findByName("Francesinha especial"));
-//            categoryService.addFoodToCategory(26L, foodRepo.findByName("Hamburger Vegetariano"));
-//            categoryService.addFoodToCategory(27L, foodRepo.findByName("Lipton Ice tea"));
-
-
-//            categoryRepo.delete(categoryRepo.findById(22L).get());
 //
-            //           categoryRepo.save(new Category(null, "Francesinhas", foodList));
-            //          categoryRepo.save(new Category(null, "Hamburguer", foodList2));
-            //        categoryRepo.save(new Category(null, "Bebidas", foodList3));
+//            categoryRepo.save(new Category(null, "Francesinhas", foodList));
+//            categoryRepo.save(new Category(null, "Hamburguer", foodList2));
+//            categoryRepo.save(new Category(null, "Bebidas", foodList3));
 
-//			foodRepo.save(new Food(null, "Cerveja", "Boa gelada", new BigDecimal(0.50),
-//                    "https://www.cocacolabrasil.com.br/content/dam/journey/br/pt/brand-landing/coca-cola-may-2021/br-pt-coca-cola-original-glass-bottle-250ml-234x700px.png",
-//                    foodCategoryRepo.findById(33L).get()));
-//			foodRepo.save(new Food(null, "Francesinha", "A frança", new BigDecimal(17.66)));
-//
-//			userService.saveRole(new Role(null, "ROLE_USER"));
-//			userService.saveRole(new Role(null, "ROLE_MANAGER"));
-//			userService.saveRole(new Role(null, "ROLE_ADMIN"));
-//			userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
+//            categoryService.addFoodToCategory(15L, foodRepo.findByName("Francesinha especial"));
+//            categoryService.addFoodToCategory(16L, foodRepo.findByName("Hamburger Vegetariano"));
+//            categoryService.addFoodToCategory(17L, foodRepo.findByName("Lipton Ice tea"));
 //
 //			userService.saveUser(new User(null, "John" , "jhon", "1234", new ArrayList<>(), new ArrayList<>(), null, null));
 //			userService.saveUser(new User(null, "Nhoj" , "nhoj", "1234", new ArrayList<>(), new ArrayList<>(), null, null));
