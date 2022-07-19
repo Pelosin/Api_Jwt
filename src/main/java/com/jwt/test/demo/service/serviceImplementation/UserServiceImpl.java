@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User getUserByUsername(String username) {
         User userByUsername = userRepo.findByUsername(username);
         if (userByUsername == null){
-            throw new BadRequestException("User" + username + "not found at DB");
+            throw new BadRequestException("User " + username + " not found at DB");
         }
         log.info("Fetching user {}", username);
         return userByUsername;
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return userRepo.save(User.builder()
                 .name("admin")
-                .username("PELOSI_ADMIN")
+                .username("USER_ADMIN")
                 .password(passwordEncoder.encode("1234"))
                 .roles(roles)
                 .build());

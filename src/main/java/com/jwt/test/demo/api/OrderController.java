@@ -3,7 +3,9 @@ package com.jwt.test.demo.api;
 import com.jwt.test.demo.config.security.JwtUtil;
 import com.jwt.test.demo.domain.Order;
 import com.jwt.test.demo.domain.OrderStatus;
+import com.jwt.test.demo.mapper.OrderMapper;
 import com.jwt.test.demo.payload.request.OrderCreateRequest;
+import com.jwt.test.demo.payload.response.OrderByIdResponse;
 import com.jwt.test.demo.payload.response.OrderHistoryResponse;
 import com.jwt.test.demo.service.OrderService;
 import com.jwt.test.demo.service.serviceImplementation.OrderServiceImpl;
@@ -39,6 +41,8 @@ public class OrderController {
 
     private final @NonNull JwtUtil jwtUtil;
 
+    private final @NonNull OrderMapper orderMapper;
+
     @PostMapping
     public ResponseEntity<Order> saveOrder(@RequestBody OrderCreateRequest orderCreateRequest){
         Order savedOrder = orderService.saveOrder(orderCreateRequest);
@@ -71,6 +75,11 @@ public class OrderController {
         String tokenWithoutBearer = jwtToken.substring(7);
         String username = jwtUtil.extractUsername(tokenWithoutBearer);
         return ResponseEntity.ok(orderService.getOrderFromUser(username));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderByIdResponse> getOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(orderMapper.toOrderByIdResponse(orderService.findOrderById(id).get()));
     }
 
     @PutMapping("/endOrder/{id}")

@@ -45,5 +45,12 @@ public class FoodServiceImpl implements FoodService {
         return foodRepo.findById(id).get();
     }
 
+    @Override
+    public void changeImage(Long id, String url) {
+        Food food = foodRepo.findById(id).get();
+        food.setUrl(url);
+        foodRepo.save(food);
+    }
+
 
 }

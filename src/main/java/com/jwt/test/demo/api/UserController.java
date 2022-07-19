@@ -3,9 +3,12 @@ package com.jwt.test.demo.api;
 import com.jwt.test.demo.config.security.JwtUtil;
 import com.jwt.test.demo.domain.Role;
 import com.jwt.test.demo.domain.User;
+import com.jwt.test.demo.exception.BadRequestException;
 import com.jwt.test.demo.exception.InvalidCredentialsException;
+import com.jwt.test.demo.mapper.UserMapper;
 import com.jwt.test.demo.payload.request.UserRequest;
 import com.jwt.test.demo.payload.response.AuthenticationResponse;
+import com.jwt.test.demo.payload.response.UserResponse;
 import com.jwt.test.demo.service.UserService;
 import lombok.Data;
 import lombok.NonNull;
@@ -15,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -35,6 +39,8 @@ public class UserController {
     private final @NonNull UserService userService;
     private final @NonNull AuthenticationManager authenticationManager;
     private final @NonNull JwtUtil jwtUtil;
+
+    private final @NonNull UserMapper userMapper;
 
     @GetMapping("/test")
     public ResponseEntity<Void> testJwtToken(){
@@ -66,6 +72,26 @@ public class UserController {
 
     }
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<AuthenticationResponse> loginAdmin(@RequestBody UserRequest userRequest){
+        try {
+            User user = this.userService.getUserByUsername(userRequest.getUsername());
+            if(user.getRoles().contains(new Role(3L,"ROLE_ADMIN"))){
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword())
+                );
+                log.info("trying to log {} {}", userRequest.getUsername(), userRequest.getPassword());
+                return ResponseEntity.ok().body(new AuthenticationResponse(jwtUtil.generateToken(userRequest.getUsername())));
+
+            }else{
+                throw new BadRequestException("Invalid role. You must not login in this section");
+            }
+        } catch (InvalidCredentialsException e) {
+            throw new InvalidCredentialsException("Invalid username or password " + e.getMessage());
+        }
+
+    }
+
     @PostMapping("/user/save")
     public ResponseEntity<AuthenticationResponse> saveUser(@RequestBody User user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
@@ -92,10 +118,13 @@ public class UserController {
     }
 
     @GetMapping("/token/user")
-    public ResponseEntity<User> getUserByToken(@RequestHeader(AUTHORIZATION) String jwtToken) {
+    public ResponseEntity<UserResponse> getUserByToken(@RequestHeader(AUTHORIZATION) String jwtToken) {
         String tokenWithoutBearer = jwtToken.substring(7);
-        String username = jwtUtil.extractUsername(tokenWithoutBearer);
-        return ResponseEntity.ok().body(userService.getUserByUsername(username));
+        return ResponseEntity.ok().body(userMapper.toUserResponse(
+                userService.getUserByUsername(
+                        jwtUtil.extractUsername(tokenWithoutBearer)
+                )
+        ));
     }
 
 }

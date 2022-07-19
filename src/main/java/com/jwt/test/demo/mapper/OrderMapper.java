@@ -5,6 +5,7 @@ import com.jwt.test.demo.domain.*;
 import com.jwt.test.demo.exception.BadRequestException;
 import com.jwt.test.demo.payload.request.LineOrderCreateRequest;
 import com.jwt.test.demo.payload.request.OrderCreateRequest;
+import com.jwt.test.demo.payload.response.OrderByIdResponse;
 import com.jwt.test.demo.payload.response.OrderHistoryResponse;
 import com.jwt.test.demo.repo.FoodRepo;
 import com.jwt.test.demo.repo.TableRepo;
@@ -46,10 +47,10 @@ public class OrderMapper {
         if (!order.getTableToServe().isOccupied()) {
             throw new BadRequestException("The table is not occupied");
         } else {
-//            log.info(jwtUtil.extractUsername(orderCreateRequest.getToken()));
-//            User userOrder = userRepo.findByUsername(jwtUtil.extractUsername(orderCreateRequest.getToken()));
-//            userOrder.getOrderList().add(order);
-//            userRepo.save(userOrder);
+            log.info(jwtUtil.extractUsername(orderCreateRequest.getToken()));
+            User userOrder = userRepo.findByUsername(jwtUtil.extractUsername(orderCreateRequest.getToken()));
+            userOrder.getOrderList().add(order);
+            userRepo.save(userOrder);
 
             return order;
         }
@@ -66,5 +67,23 @@ public class OrderMapper {
                     .build());
         }
         return orderHistoryResponseList;
+    }
+
+    public OrderByIdResponse toOrderByIdResponse(Order order) {
+//        List<LineOrderCreateRequest> lineOrderList = new ArrayList<>();
+//        for (LineOrder lineOrder: order.getLineOrderList()) {
+//            lineOrderList.add(
+//                    new LineOrderCreateRequest(
+//                            lineOrder.getFood().getName(),
+//                            lineOrder.getQuantity()
+//                    )
+//            );
+//        }
+        return OrderByIdResponse.builder()
+                .id(order.getId())
+                .lineOrderList(order.getLineOrderList())
+                .price(order.getPrice())
+                .createdDateTime(order.getCreatedDateTime())
+                .build();
     }
 }

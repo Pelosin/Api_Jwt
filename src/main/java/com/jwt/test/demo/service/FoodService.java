@@ -11,4 +11,5 @@ public interface FoodService {
     Food saveFood(Food food);
     void deleteFoodById(Long id);
     Food findById(Long id);
+    void changeImage(Long id, String url);
 }
